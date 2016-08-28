@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="IJ2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/javacv.jar!/" />
+      <root url="jar://$PROJECT_DIR$/opencv-linux-x86_64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/commons-math3-3.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ij.jar!/" />
+      <root url="jar://$PROJECT_DIR$/opencv.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javacpp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/CPU_Meter-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/IHC_Toolbox.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Template_Matching.jar!/" />
+      <root url="jar://$PROJECT_DIR$/commons-math-2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

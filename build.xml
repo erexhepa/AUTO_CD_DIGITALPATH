@@ -1,0 +1,111 @@
+<!-- Ant makefile for ImageJ -->
+
+
+<project name="ImageJ" default="run">
+
+  <target name="compile" description="Compile everything.">
+    <!-- First, ensure the build directory exists. -->
+    <mkdir dir="build" />
+    <!-- Build everything; add debug="on" to debug -->
+    <javac srcdir="." destdir="build" optimize="on" source="1.8" target="1.8" debug="on" includeantruntime="false">
+      <!-- The plugins directory only needs to be 
+             present at runtime, not at build time. -->
+      <exclude name="plugins/**"/>
+    </javac>
+  </target>
+
+  <target name="build" depends="compile" description="Build ij.jar.">
+    <!-- Copy needed files into the build directory. -->
+    <copy file="IJ_Props.txt" todir="build" />
+    <copy file="images/microscope.gif" tofile="build/microscope.gif" />
+    <copy file="images/about.jpg" tofile="build/about.jpg" />
+	<copy file="plugins/MacAdapter.class" tofile="build/MacAdapter.class" /> 
+	<copy file="plugins/MacClipboard.class" tofile="build/MacClipboard.class" /> 
+    <copy todir="build/macros"><fileset dir="macros"/></copy>
+    <!-- Build ij.jar. -->
+    <jar jarfile="ij.jar" basedir="build"
+         manifest="MANIFEST.MF" />
+  </target>
+
+
+  <target name="clean" description="Delete the build/out and jar plugin files files.">
+    <delete dir="build" />
+    <delete dir="out" />
+    <delete file="SME_PROJECTION_ENS.jar" />
+  </target>
+
+
+  <target name="run" depends="build" description="Build and run ImageJ.">
+    <copy file="ij.jar" toDir=".." />
+    <java maxmemory="640m" jar="ij.jar" fork="yes" />
+  </target>
+    
+
+  <target name="run2" depends="build" description="Build and run ImageJ.">
+    <!-- Run in ImageJ directory -->
+    <copy file="ij.jar" toDir=".." />
+    <java maxmemory="640m" dir=".." jar="ij.jar" fork="yes" />
+  </target>
+
+  <target name="zip" depends="clean" description="Build zrc.zip.">
+    <zip zipfile="../src.zip"
+       basedir=".."
+       includes="source/**"
+    />
+  </target>
+
+    <!-- SME PLUGIN BINARY TARGETS = START -->
+
+    <target name="prepareDir" description="prepare source directory prior to the archive compilation">
+        <!-- Prepare jar directory. -->
+        <mkdir dir="SME_stacking" />
+       <copydir src="build/SME_PROJECTION_SRC" dest="SME_stacking/SME_PROJECTION_SRC"/>
+       <copydir src="build/org" dest="SME_stacking/org"/>
+      <copyfile src="SME_PROJECTION_SRC/plugins.config" dest="SME_stacking/plugins.config"/>
+  </target>
+
+<target name="createSMEjar" depends="prepareDir" description="Create JAR SME plugin">
+      <!-- Build ij.jar. -->
+        <jar jarfile="SME_stacking.jar" basedir="SME_stacking"
+             manifest="MANIFEST_SME.MF" /><!-- Create JAR archive -->
+        <delete dir="SME_stacking" />
+  </target>
+
+    <!-- SME PLUGIN BINARY TARGETS = END -->
+
+  <!-- SME PLUGIN SOURCES TARGETS = START -->
+
+  <target name="prepareDirSource" description="prepare source directory prior to the archive compilation">
+    <!-- Prepare jar directory. -->
+    <mkdir dir="src_java" />
+    <copydir src="SME_PROJECTION_SRC" dest="src_java/SME_stacking"/>
+    <copydir src="org" dest="SME_PROJECTION_ENS_SRC/org"/>
+    <copyfile src="SME_PROJECTION_SRC/plugins.config" dest="src_java/plugins.config"/>
+  </target>
+
+  <target name="createSMEjarSource" depends="prepareDirSource" description="Create JAR SME plugin from source files">
+    <!-- Build ij.jar. -->
+    <jar jarfile="src_java.jar" basedir="src_java"
+         manifest="MANIFEST_SME.MF" /><!-- Create JAR archive -->
+    <delete dir="src_java" />
+  </target>
+
+  <!-- SME PLUGIN SOURCES TARGETS = END -->
+
+  <target name="javadocs" description="Build the JavaDocs.">
+    <delete dir="../api" />
+    <mkdir dir="../api" />
+    <javadoc 
+           sourcepath="."
+           packagenames="ij.*"
+           destdir="../api"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="ImageJ API">
+    </javadoc>
+  </target>
+  
+  
+   </project>
+
