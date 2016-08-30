@@ -141,10 +141,12 @@ public class CDR_run_auto implements PlugIn {
         height = imp.getHeight();
 
         // Select folder and parameters
-        spectrumFolder = Prefs.get("dip.spetrumfolder", IJ.getDirectory("temp"));
+        /*spectrumFolder = Prefs.get("dip.spetrumfolder", IJ.getDirectory("temp"));
         DirectoryChooser.setDefaultDirectory(spectrumFolder);
         DirectoryChooser dc = new DirectoryChooser("Select spectra folder");
-        spectrumFolder = dc.getDirectory();
+        spectrumFolder = dc.getDirectory();*/
+        spectrumFolder = "/Users/ERexhepa/Documents/TrainingTissueFinder/CDReview_Installation/CDReview_spectra/";
+
         if (spectrumFolder == null)
             return;
         Prefs.set("dip.spetrumfolder", spectrumFolder);
@@ -166,6 +168,7 @@ public class CDR_run_auto implements PlugIn {
                 return;
             }
         }
+
         spectrumLength = getSizeofSpectra();
         if ( spectrumLength == 0 ){
             IJ.showMessage("Spectra have different size. Check spectra files! Processing canceled");
@@ -625,6 +628,8 @@ public class CDR_run_auto implements PlugIn {
 
 
     boolean selectParameters() {
+        // TODO Rewrite to simplifify the dialog for simple version and totally remove for the command line version
+
         String[] stainSpectra = getChoices(spectrumFolder + stainSubPath);
         String[] illSpectra = getChoices(spectrumFolder + illuminationSubPath);
         String[] sensorSpectra = getChoices(spectrumFolder + sensorSubPath);
