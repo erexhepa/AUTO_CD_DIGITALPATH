@@ -141,10 +141,12 @@ public class CDR_run_cmdline implements PlugIn {
         height = imp.getHeight();
 
         // Select folder and parameters
-        spectrumFolder = Prefs.get("dip.spetrumfolder", IJ.getDirectory("temp"));
+        /*spectrumFolder = Prefs.get("dip.spetrumfolder", IJ.getDirectory("temp"));
         DirectoryChooser.setDefaultDirectory(spectrumFolder);
         DirectoryChooser dc = new DirectoryChooser("Select spectra folder");
-        spectrumFolder = dc.getDirectory();
+        spectrumFolder = dc.getDirectory();*/
+        spectrumFolder = "/Users/ERexhepa/Documents/TrainingTissueFinder/CDReview_Installation/CDReview_spectra/";
+
         if (spectrumFolder == null)
             return;
         Prefs.set("dip.spetrumfolder", spectrumFolder);
@@ -166,6 +168,7 @@ public class CDR_run_cmdline implements PlugIn {
                 return;
             }
         }
+
         spectrumLength = getSizeofSpectra();
         if ( spectrumLength == 0 ){
             IJ.showMessage("Spectra have different size. Check spectra files! Processing canceled");
@@ -625,12 +628,26 @@ public class CDR_run_cmdline implements PlugIn {
 
 
     boolean selectParameters() {
+        // TODO Rewrite to simplifify the dialog for simple version and totally remove for the command line version
+
         String[] stainSpectra = getChoices(spectrumFolder + stainSubPath);
         String[] illSpectra = getChoices(spectrumFolder + illuminationSubPath);
         String[] sensorSpectra = getChoices(spectrumFolder + sensorSubPath);
 
-        GenericDialog gd = new GenericDialog("CDReview");
-        gd.addChoice("Stain 1", stainSpectra, strStain[0]);
+        // Reconfigure default staining parameters
+        String[] stainSpectraGenfit = new String[stainSpectra.length];
+        stainSpectraGenfit[0]       = "HeamatoxylinEosin";
+        stainSpectraGenfit[1]       = "HeamatoxylinEosinSerafin";
+        stainSpectraGenfit[2]       = "HeamatoxylinPicosirius";
+        stainSpectraGenfit[3]       = "Picosirius";
+        stainSpectraGenfit[4]       = "MasonTrichrome";
+        stainSpectraGenfit[5]       = "HeamatoxylinDAB";
+
+        GenericDialog gd = new GenericDialog("NASH ROBUST COLOUR DECONV - STAIN COMBINATIONS");
+        gd.addChoice("STAIN PROTOCOL - ", stainSpectraGenfit, strStain[0]);
+        gd.showDialog();
+
+/*        gd.addChoice("Stain 1", stainSpectra, strStain[0]);
         gd.addChoice("Stain 2", stainSpectra, strStain[1]);
         gd.addChoice("Stain 3", stainSpectra, strStain[2]);
         gd.addChoice("Illumination R", illSpectra, strIll[R]);
@@ -643,12 +660,12 @@ public class CDR_run_cmdline implements PlugIn {
         gd.addCheckbox("Use pseudo3Stain", usePseudo3Stain);
         gd.addChoice("2 stain mode", modes2Stain, modes2Stain[0]);
         gd.addChoice("Decon mode", modesDecon, modesDecon[0]);
-        gd.showDialog();
+        gd.showDialog();*/
 
         if (gd.wasCanceled())
             return false;
 
-        strStain[0] = gd.getNextChoice();
+/*        strStain[0] = gd.getNextChoice();
         strStain[1] = gd.getNextChoice();
         strStain[2] = gd.getNextChoice();
         strIll[R] = gd.getNextChoice();
@@ -662,9 +679,82 @@ public class CDR_run_cmdline implements PlugIn {
         usePseudo3Stain = gd.getNextBoolean();
 
         strMode2Stain = gd.getNextChoice();
-        strModeDecon = gd.getNextChoice();
-
+        strModeDecon = gd.getNextChoice();*/
+        configureStainingProtolParam(gd.getNextChoiceIndex(),stainSpectra,illSpectra,sensorSpectra);
         return true;
+    }
+
+    void configureStainingProtolParam(int choiceProtocol, String[] stainSpectra, String[] illSpectra,String[] sensorSpectra){
+        switch (choiceProtocol){
+            case 1:{
+                strStain[0]     = stainSpectra[4];  strStain[1] = stainSpectra[2];      strStain[2] = stainSpectra[0];
+                strIll[R]       = illSpectra[2];    strIll[G]   = illSpectra[2];        strIll[B]   = illSpectra[2];
+                strSensor[R]    = strSensor[4];     strSensor[G]= strSensor[3];         strSensor[B]= strSensor[1];
+
+                useNormalizedVectors    = Boolean.TRUE;
+                usePseudo3Stain         = Boolean.FALSE;
+
+                strMode2Stain           = this.modes2Stain[2];
+                strModeDecon            = this.modesDecon[2];
+            }
+            case 2:{
+                strStain[0]     = stainSpectra[4];  strStain[1] = stainSpectra[2];      strStain[2] = stainSpectra[0];
+                strIll[R]       = illSpectra[2];    strIll[G]   = illSpectra[2];        strIll[B]   = illSpectra[2];
+                strSensor[R]    = sensorSpectra[4];     strSensor[G]= sensorSpectra[3];         strSensor[B]= sensorSpectra[1];
+
+                useNormalizedVectors    = Boolean.TRUE;
+                usePseudo3Stain         = Boolean.FALSE;
+
+                strMode2Stain           = this.modes2Stain[2];
+                strModeDecon            = this.modesDecon[2];
+            }
+            case 3:{
+                strStain[0]     = stainSpectra[4];  strStain[1] = stainSpectra[2];      strStain[2] = stainSpectra[0];
+                strIll[R]       = illSpectra[2];    strIll[G]   = illSpectra[2];        strIll[B]   = illSpectra[2];
+                strSensor[R]    = sensorSpectra[4];     strSensor[G]= sensorSpectra[3];         strSensor[B]= sensorSpectra[1];
+
+                useNormalizedVectors    = Boolean.TRUE;
+                usePseudo3Stain         = Boolean.FALSE;
+
+                strMode2Stain           = this.modes2Stain[2];
+                strModeDecon            = this.modesDecon[2];
+            }
+            case 4:{
+                strStain[0]     = stainSpectra[4];  strStain[1] = stainSpectra[2];      strStain[2] = stainSpectra[0];
+                strIll[R]       = illSpectra[2];    strIll[G]   = illSpectra[2];        strIll[B]   = illSpectra[2];
+                strSensor[R]    = sensorSpectra[4];     strSensor[G]= sensorSpectra[3];         strSensor[B]= sensorSpectra[1];
+
+                useNormalizedVectors    = Boolean.TRUE;
+                usePseudo3Stain         = Boolean.FALSE;
+
+                strMode2Stain           = this.modes2Stain[2];
+                strModeDecon            = this.modesDecon[2];
+            }
+            case 5:{
+                strStain[0]     = stainSpectra[4];  strStain[1] = stainSpectra[2];      strStain[2] = stainSpectra[0];
+                strIll[R]       = illSpectra[2];    strIll[G]   = illSpectra[2];        strIll[B]   = illSpectra[2];
+                strSensor[R]    = sensorSpectra[4];     strSensor[G]= sensorSpectra[3];         strSensor[B]= sensorSpectra[1];
+
+                useNormalizedVectors    = Boolean.TRUE;
+                usePseudo3Stain         = Boolean.FALSE;
+
+                strMode2Stain           = this.modes2Stain[2];
+                strModeDecon            = this.modesDecon[2];
+            }
+            default:{
+                // Default case is HE
+                strStain[0]     = stainSpectra[4];  strStain[1] = stainSpectra[2];      strStain[2] = stainSpectra[0];
+                strIll[R]       = illSpectra[2];    strIll[G]   = illSpectra[2];        strIll[B]   = illSpectra[2];
+                strSensor[R]    = sensorSpectra[4];     strSensor[G]= sensorSpectra[3];         strSensor[B]= sensorSpectra[1];
+
+                useNormalizedVectors    = Boolean.TRUE;
+                usePseudo3Stain         = Boolean.FALSE;
+
+                strMode2Stain           = this.modes2Stain[2];
+                strModeDecon            = this.modesDecon[2];
+            }
+        }
+
     }
 
     void readPrefs(){
