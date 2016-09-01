@@ -360,10 +360,10 @@ plug-in05="Compile and Run...",ij.plugin.Compiler
 plug-in06="Install... [M]",ij.plugin.PluginInstaller
 #plug-in07=-
 #plug-in08=>"User_Plugins"
-plug-in07="ENS_SME_PROJECTION_GET_MANIFOLD",ij.plugin.filter.SME_PROJECTION_SRC.SME_Plugin_Get_Manifold
-plug-in08="ENS_SME_PROJECTION_APPLY_MANIFOLD",ij.plugin.filter.SME_PROJECTION_SRC.SME_Plugin_Apply_Manifold
-plug-in09="ENS_SME_PROJECTION_TEST_MANIFOLD",ij.plugin.filter.SME_PROJECTION_SRC.SME_Plugin_TEST
-plug-in10="ENS_SME_PROJECTION_SIMPLE", ij.plugin.filter.SME_PROJECTION_SRC.SME_Plugin_Simple
+
+plug-in07= "GF Colour Deconv Automated", ij.plugin.filter.AUTO_COL_DECONV.CDR_run_cmdline
+plug-in08= "GF Colour Deconv Original", ij.plugin.filter.AUTO_COL_DECONV.CDR_run
+plug-in09= "GF Colour Deconv Simple", ij.plugin.filter.AUTO_COL_DECONV.CDR_run_auto
 
 # Install user plugins located in ij.jar to Plugins>User Plugins submenu
 #user_plugins01="Red And Blue",RedAndBlue_
